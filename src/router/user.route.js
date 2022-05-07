@@ -1,13 +1,20 @@
-const Router = require('koa-router')
+const Router = require("koa-router");
 
-const router = new Router({ prefix: '/v1/user' })
+const router = new Router({ prefix: "/v1/user" });
+const {
+  userValidator,
+  verifyUser,
+  crpytPassword,
+  verifyLogin,
+} = require("../middleware/user.middleware");
 
 const {
   register,
   login,
-  changePassword,
-} = require('../controller/user.controller')
+} = require("../controller/user.controller");
 
-router.post("/login", login);
+router.post("/register", userValidator, verifyUser, crpytPassword, register);
 
-module.exports = router
+router.post("/login", userValidator, verifyLogin, login);
+
+module.exports = router;

@@ -1,6 +1,6 @@
 const User = require("../model/user.modal");
 
-class UserService {
+class ArticleService {
   async createUser(username, password) {
     const res = await User.create({ username, password });
     return res.dataValues;
@@ -19,4 +19,4 @@ class UserService {
   }
 }
 
-module.exports = new UserService();
+module.exports = new ArticleService();
