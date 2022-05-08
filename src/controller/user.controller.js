@@ -19,7 +19,7 @@ class UserController {
     } catch (err) {
       ctx.body = {
         result: 1,
-        message: "操作失败",
+        message: "用户注册失败",
         data: null,
       };
     }

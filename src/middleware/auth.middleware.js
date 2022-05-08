@@ -10,9 +10,21 @@ const auth = async (ctx, next) => {
   } catch (err) {
     switch (err.name) {
       case "TokenExpiredError":
-        ctx.throw(401, "token已过期");
+        ctx.status = 401;
+        ctx.body = {
+          result: 1,
+          message: "token已过期",
+          data: null,
+        };
+        return;
       case "JsonWebTokenError":
-        ctx.throw(401, "无效的token");
+        ctx.status = 401;
+        ctx.body = {
+          result: 1,
+          message: "无效的token",
+          data: null,
+        };
+        return;
     }
   }
   await next();
