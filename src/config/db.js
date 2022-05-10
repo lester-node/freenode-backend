@@ -1,9 +1,9 @@
 const { Sequelize } = require('sequelize')
 
-const seq = new Sequelize('freenode', 'root', '123456', {
-  host: 'localhost',
-  dialect: 'mysql',
-})
+const sequelize = new Sequelize("freenode", "root", "123456", {
+  host: "localhost",
+  dialect: "mysql",
+});
 
 // seq
 //   .authenticate()
@@ -14,4 +14,4 @@ const seq = new Sequelize('freenode', 'root', '123456', {
 //     console.log('数据库连接失败', err)
 //   })
 
-module.exports = seq
+module.exports = sequelize;
