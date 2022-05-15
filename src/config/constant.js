@@ -4,4 +4,5 @@ module.exports = {
     message: "操作失败",
     data: null,
   },
+  imgPath:'localhost:3000'
 };

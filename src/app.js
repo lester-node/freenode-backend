@@ -13,12 +13,18 @@ const app = new Koa();
 
 app.use(
   KoaBody({
-    parsedMethods: ["POST", "GET"],
+    multipart: true,
+    formidable: {
+      uploadDir: path.join(__dirname, "./upload"),///文件上传目录
+      keepExtensions: true,//是否保存原扩展形式
+    },
+    parsedMethods: ["POST"],
   })
 );
 
 app.use(KoaParameter(app));
 app.use(router.routes()).use(router.allowedMethods());
+app.use(KoaStatic(path.join(__dirname, "./upload")));
 
 app.listen("3000", () => {
   console.log(`server is running on http://localhost:3000`);

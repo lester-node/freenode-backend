@@ -1,16 +1,86 @@
-const { getUerInfo } = require("../service/article.service");
+const {
+  servicePage,
+  serviceCreate,
+  serviceUpdate,
+  serviceDelete,
+} = require("../service/article.service");
 
 class ArticleController {
-  //注册
-  async getArticleById(ctx, next) {
-    const { username } = ctx.request.body;
+  //新增
+  async articleCreate(ctx, next) {
     try {
-      const res = await getUerInfo(username);
+      const res = await serviceCreate(ctx.request.body);
+      ctx.body = {
+        result: 0,
+        message: "新增文章成功",
+        data: {
+          ...res,
+        },
+      };
+    } catch (err) {
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //修改
+  async articleUpdate(ctx, next) {
+    try {
+      const res = await serviceUpdate(ctx.request.body);
+      if (res) {
+        ctx.body = {
+          result: 0,
+          message: "修改成功",
+          data: null,
+        };
+      } else {
+        throw "error";
+      }
+    } catch (err) {
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //删除
+  async articleDelete(ctx, next) {
+    const { id } = ctx.request.body;
+    try {
+      const res = await serviceDelete(id);
+      if (res) {
+        ctx.body = {
+          result: 0,
+          message: "删除成功",
+          data: null,
+        };
+      } else {
+        throw "error";
+      }
+    } catch (err) {
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //分页
+  async articlePage(ctx, next) {
+    const { page: pageNum = 1, rows: pageSize = 10 } = ctx.request.body;
+    try {
+      const res = await servicePage(pageNum, pageSize);
       ctx.body = {
         result: 0,
         message: "查询成功",
         data: {
-          ...res
+          ...res,
         },
       };
     } catch (err) {

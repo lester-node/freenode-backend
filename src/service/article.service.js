@@ -1,21 +1,32 @@
-const User = require("../model/user.modal");
+const Article = require("../model/article.modal");
 
 class ArticleService {
-  async createUser(username, password) {
-    const res = await User.create({ username, password });
+  async serviceCreate(obj) {
+    const res = await Article.create(obj);
     return res.dataValues;
   }
 
-  //查询用户信息
-  async getUerInfo({ username, password }) {
-    const whereOpt = {};
-    username && Object.assign(whereOpt, { username });
-    password && Object.assign(whereOpt, { password });
-    const res = await User.findOne({
-      attributes: ["username", "password","isAdmin"],
-      where: whereOpt,
+  async serviceUpdate(obj) {
+    const { id } = obj;
+    const res = await Article.update(obj, { where: { id } });
+    return res[0] > 0 ? true : false;
+  }
+
+  async serviceDelete(id) {
+    const res = await Article.destroy({ where: { id } });
+    return res > 0 ? true : false;
+  }
+
+  async servicePage(pageNum, pageSize) {
+    const offset = (pageNum - 1) * pageSize;
+    const { count, rows } = await Article.findAndCountAll({
+      offset,
+      limit: pageSize * 1,
     });
-    return res ? res.dataValues : null;
+    return {
+      total: count,
+      rows,
+    };
   }
 }
 
