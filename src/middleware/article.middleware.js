@@ -2,9 +2,9 @@ const { errInfo } = require("../config/constant");
 
 //判断是否为空
 const articleValidator = async (ctx, next) => {
-  const { name, content } =
+  const { title, content } =
     ctx.request.body;
-  if (!name || !content ) {
+  if (!title || !content) {
     ctx.body = {
       result: 1,
       message: "标题和内容不能为空",

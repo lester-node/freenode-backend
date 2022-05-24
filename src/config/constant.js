@@ -4,5 +4,6 @@ module.exports = {
     message: "操作失败",
     data: null,
   },
-  imgPath:'localhost:3000'
+  //怎么看本地主机？
+  imgPath: "http://192.168.1.6:3000",
 };

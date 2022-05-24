@@ -12,7 +12,7 @@ const Article = db.define("article", {
     primaryKey: true,
     autoIncrement: false,
   },
-  name: {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: false,
