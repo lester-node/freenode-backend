@@ -36,6 +36,13 @@ const Article = db.define("article", {
     unique: false,
     comment: "标签名",
   },
+  show: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    unique: false,
+    defaultValue: 1,
+    comment:'0不显示，1显示'
+  },
 });
 
 Classify.hasOne(Article, {
@@ -44,5 +51,7 @@ Classify.hasOne(Article, {
 Tag.hasMany(Article, {
   foreignKey: "tagId",
 });
+
+// Article.sync({ alter: true });
 
 module.exports = Article;

@@ -1,4 +1,5 @@
 const Article = require("../model/article.modal");
+const { Op } = require("sequelize");
 
 class ArticleService {
   async serviceCreate(obj) {
@@ -17,11 +18,24 @@ class ArticleService {
     return res > 0 ? true : false;
   }
 
-  async servicePage(pageNum, pageSize) {
+  async serviceSelectOne(id) {
+    const res = await Article.findOne({
+      where: { id },
+    });
+    return res.dataValues;
+  }
+
+  async servicePage(pageNum, pageSize, obj) {
     const offset = (pageNum - 1) * pageSize;
     const { count, rows } = await Article.findAndCountAll({
       offset,
       limit: pageSize * 1,
+      order: [["updatedAt", "DESC"]],
+      where: {
+        title: {
+          [Op.like]: `%${obj.title}%`,
+        },
+      },
     });
     return {
       total: count,

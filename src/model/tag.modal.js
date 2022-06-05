@@ -14,8 +14,23 @@ const Tag = db.define("tag", {
     type: DataTypes.STRING,
     allowNull: false,
     unique: false,
-    comment: "分类名",
+    comment: "标签名",
+  },
+  show: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    unique: false,
+    defaultValue: 1,
+    comment: "0不显示，1显示",
+  },
+  color: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: false,
+    comment: "颜色",
   },
 });
+
+// Tag.sync({ alter: true });
 
 module.exports = Tag;

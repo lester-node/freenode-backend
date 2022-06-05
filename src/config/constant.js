@@ -5,5 +5,5 @@ module.exports = {
     data: null,
   },
   //怎么看本地主机？
-  imgPath: "http://192.168.1.6:3000",
+  imgPath: "http://192.168.1.7:3000",
 };

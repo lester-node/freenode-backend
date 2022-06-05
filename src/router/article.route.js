@@ -12,11 +12,15 @@ const {
   articleCreate,
   articleUpdate,
   articleDelete,
+  articleSelectOne,
+  articleChangeShow,
 } = require("../controller/article.controller");
 
 router.get("/articlePage", auth, articlePage);
 router.post("/articleCreate", auth, articleValidator, articleCreate);
 router.post("/articleDelete", auth, idValidator, articleDelete);
+router.post("/articleChangeShow", auth, idValidator, articleChangeShow);
+router.post("/articleSelectOne", auth, idValidator, articleSelectOne);
 router.post(
   "/articleUpdate",
   auth,
