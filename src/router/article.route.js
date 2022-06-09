@@ -5,6 +5,7 @@ const { auth } = require("../middleware/auth.middleware");
 const {
   articleValidator,
   idValidator,
+  idsValidator,
 } = require("../middleware/article.middleware");
 
 const {
@@ -18,7 +19,7 @@ const {
 
 router.get("/articlePage", auth, articlePage);
 router.post("/articleCreate", auth, articleValidator, articleCreate);
-router.post("/articleDelete", auth, idValidator, articleDelete);
+router.post("/articleDelete", auth, idsValidator, articleDelete);
 router.post("/articleChangeShow", auth, idValidator, articleChangeShow);
 router.post("/articleSelectOne", auth, idValidator, articleSelectOne);
 router.post(

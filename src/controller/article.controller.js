@@ -74,9 +74,9 @@ class ArticleController {
 
   //删除
   async articleDelete(ctx, next) {
-    const { id } = ctx.request.body;
+    const { ids } = ctx.request.body;
     try {
-      const res = await serviceDelete(id);
+      const res = await serviceDelete(ids);
       if (res) {
         ctx.body = {
           result: 0,

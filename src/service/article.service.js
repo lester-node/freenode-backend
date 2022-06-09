@@ -1,5 +1,6 @@
 const Article = require("../model/article.modal");
 const { Op } = require("sequelize");
+const { removeEmptyObj } = require("../config/utils");
 
 class ArticleService {
   async serviceCreate(obj) {
@@ -13,8 +14,14 @@ class ArticleService {
     return res[0] > 0 ? true : false;
   }
 
-  async serviceDelete(id) {
-    const res = await Article.destroy({ where: { id } });
+  async serviceDelete(ids) {
+    const res = await Article.destroy({
+      where: {
+        id: {
+          [Op.or]: ids,
+        },
+      },
+    });
     return res > 0 ? true : false;
   }
 
@@ -26,14 +33,19 @@ class ArticleService {
   }
 
   async servicePage(pageNum, pageSize, obj) {
+    let sendObj = removeEmptyObj(obj);
     const offset = (pageNum - 1) * pageSize;
     const { count, rows } = await Article.findAndCountAll({
       offset,
       limit: pageSize * 1,
-      order: [["updatedAt", "DESC"]],
+      // order: [["updatedAt", "DESC"]],
       where: {
+        ...sendObj,
         title: {
-          [Op.like]: `%${obj.title}%`,
+          [Op.like]: `%${sendObj.title || ""}%`,
+        },
+        tagId: {
+          [Op.like]: `%${sendObj.tagId || ""}%`,
         },
       },
     });

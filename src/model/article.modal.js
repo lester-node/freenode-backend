@@ -24,11 +24,23 @@ const Article = db.define("article", {
     unique: false,
     comment: "内容",
   },
+  classifyId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: false,
+    comment: "分类Id",
+  },
   classifyName: {
     type: DataTypes.STRING,
     allowNull: true,
     unique: false,
     comment: "分类名",
+  },
+  tagId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    unique: false,
+    comment: "标签Id",
   },
   tagName: {
     type: DataTypes.STRING,
@@ -41,16 +53,16 @@ const Article = db.define("article", {
     allowNull: false,
     unique: false,
     defaultValue: 1,
-    comment:'0不显示，1显示'
+    comment: "0不显示，1显示",
   },
 });
 
-Classify.hasOne(Article, {
-  foreignKey: "classifyId",
-});
-Tag.hasMany(Article, {
-  foreignKey: "tagId",
-});
+// Classify.hasOne(Article, {
+//   foreignKey: "classifyId",
+// });
+// Tag.hasMany(Article, {
+//   foreignKey: "tagId",
+// });
 
 // Article.sync({ alter: true });
 
