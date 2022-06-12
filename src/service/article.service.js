@@ -34,6 +34,16 @@ class ArticleService {
 
   async servicePage(pageNum, pageSize, obj) {
     let sendObj = removeEmptyObj(obj);
+    sendObj.title
+      ? (sendObj.title = {
+          [Op.like]: `%${sendObj.title || ""}%`,
+        })
+      : null;
+    sendObj.tagId
+      ? (sendObj.tagId = {
+          [Op.like]: `%${sendObj.tagId || ""}%`,
+        })
+      : null;
     const offset = (pageNum - 1) * pageSize;
     const { count, rows } = await Article.findAndCountAll({
       offset,
@@ -41,12 +51,6 @@ class ArticleService {
       // order: [["updatedAt", "DESC"]],
       where: {
         ...sendObj,
-        title: {
-          [Op.like]: `%${sendObj.title || ""}%`,
-        },
-        tagId: {
-          [Op.like]: `%${sendObj.tagId || ""}%`,
-        },
       },
     });
     return {

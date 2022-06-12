@@ -137,6 +137,7 @@ class ArticleController {
         },
       };
     } catch (err) {
+      console.log('err--------',err);
       ctx.body = {
         result: 1,
         message: "操作失败",
