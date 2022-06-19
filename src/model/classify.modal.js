@@ -13,7 +13,7 @@ const Classify = db.define("classify", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: false,
+    unique: true,
     comment: "分类名",
   },
   show: {
@@ -27,6 +27,7 @@ const Classify = db.define("classify", {
     type: DataTypes.INTEGER,
     allowNull: false,
     unique: false,
+    defaultValue: 0,
     comment: "文章数量",
   },
 });

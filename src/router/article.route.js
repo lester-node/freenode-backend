@@ -4,9 +4,13 @@ const router = new Router({ prefix: "/v1/article" });
 const { auth } = require("../middleware/auth.middleware");
 const {
   articleValidator,
+  repeatValidator,
+} = require("../middleware/article.middleware");
+
+const {
   idValidator,
   idsValidator,
-} = require("../middleware/article.middleware");
+} = require("../middleware/common.middleware");
 
 const {
   articlePage,
@@ -18,7 +22,13 @@ const {
 } = require("../controller/article.controller");
 
 router.get("/articlePage", auth, articlePage);
-router.post("/articleCreate", auth, articleValidator, articleCreate);
+router.post(
+  "/articleCreate",
+  auth,
+  articleValidator,
+  repeatValidator,
+  articleCreate
+);
 router.post("/articleDelete", auth, idsValidator, articleDelete);
 router.post("/articleChangeShow", auth, idValidator, articleChangeShow);
 router.post("/articleSelectOne", auth, idValidator, articleSelectOne);
@@ -27,6 +37,7 @@ router.post(
   auth,
   articleValidator,
   idValidator,
+  repeatValidator,
   articleUpdate
 );
 

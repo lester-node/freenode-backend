@@ -1,4 +1,8 @@
 const Article = require("../model/article.modal");
+const {
+  serviceSelectOne: classifyServiceSelectOne,
+  serviceUpdate: classifyServiceUpdate,
+} = require("../service/classify.service");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
@@ -30,6 +34,28 @@ class ArticleService {
       where: { id },
     });
     return res.dataValues;
+  }
+
+  async serviceRepeat(title) {
+    const res = await Article.findOne({
+      where: { title },
+    });
+    return res ? res.dataValues : null;
+  }
+
+  async serviceArticleNum(classifyId, calc) {
+    const record = await classifyServiceSelectOne(classifyId);
+    if (calc == "add") {
+      return classifyServiceUpdate({
+        id: record.id,
+        articleTotal: ++record.articleTotal,
+      });
+    } else if (calc == "sub") {
+      return classifyServiceUpdate({
+        id: record.id,
+        articleTotal: --record.articleTotal,
+      });
+    }
   }
 
   async servicePage(pageNum, pageSize, obj) {

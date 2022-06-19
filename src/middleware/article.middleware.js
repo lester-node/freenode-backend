@@ -1,9 +1,8 @@
-const { errInfo } = require("../config/constant");
+const { serviceRepeat } = require("../service/article.service");
 
 //判断是否为空
 const articleValidator = async (ctx, next) => {
-  const { title, content } =
-    ctx.request.body;
+  const { title, content } = ctx.request.body;
   if (!title || !content) {
     ctx.body = {
       result: 1,
@@ -15,42 +14,30 @@ const articleValidator = async (ctx, next) => {
   await next();
 };
 
-const idValidator = async (ctx, next) => {
-  const { id } = ctx.request.body;
-  if (!id) {
+//判断是否重复
+const repeatValidator = async (ctx, next) => {
+  const { title } = ctx.request.body;
+  try {
+    const res = await serviceRepeat(title);
+    if (!res) {
+      await next();
+    } else {
+      ctx.body = {
+        result: 1,
+        message: "标题不能重复",
+        data: null,
+      };
+    }
+  } catch (err) {
     ctx.body = {
       result: 1,
-      message: "id不能为空",
+      message: "操作失败",
       data: null,
     };
-    return;
   }
-  await next();
-};
-
-const idsValidator = async (ctx, next) => {
-  const { ids } = ctx.request.body;
-  if (!Array.isArray(ids)){
-    ctx.body = {
-      result: 1,
-      message: "ids必须为数组",
-      data: null,
-    };
-    return;
-  }
-  if (!ids.length) {
-    ctx.body = {
-      result: 1,
-      message: "id不能为空",
-      data: null,
-    };
-    return;
-  }
-  await next();
 };
 
 module.exports = {
   articleValidator,
-  idValidator,
-  idsValidator,
+  repeatValidator,
 };

@@ -15,7 +15,7 @@ const Article = db.define("article", {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: false,
+    unique: true,
     comment: "文章名",
   },
   content: {
