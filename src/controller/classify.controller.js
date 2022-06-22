@@ -7,6 +7,8 @@ const {
   serviceSelectOne,
 } = require("../service/classify.service");
 
+const Classify = require("../model/classify.modal");
+
 class ClassifyController {
   //返回全部数据
   async classifyEnum(ctx, next) {
@@ -75,20 +77,40 @@ class ClassifyController {
     }
   }
 
-  //删除
+  //删除 差判断文章为0
   async classifyDelete(ctx, next) {
     const { ids } = ctx.request.body;
     try {
-      const res = await serviceDelete(ids);
-      if (res) {
-        ctx.body = {
-          result: 0,
-          message: "删除成功",
-          data: null,
-        };
-      } else {
-        throw "error";
-      }
+      await Promise.all(
+        ids.map(async (id) => {
+          return new Promise(async (resolve) => {
+            let res = await Classify.findOne({
+              where: { id },
+            });
+            resolve(res.dataValues);
+          });
+        })
+      ).then(async (res) => {
+        let judge = res.every((item) => item.articleTotal == 0);
+        if (judge) {
+          const res = await serviceDelete(ids);
+          if (res) {
+            ctx.body = {
+              result: 0,
+              message: "删除成功",
+              data: null,
+            };
+          } else {
+            throw "error";
+          }
+        }else{
+          ctx.body = {
+            result: 1,
+            message: "删除的分类文章数必须为0",
+            data: null,
+          };
+        }
+      });
     } catch (err) {
       ctx.body = {
         result: 1,

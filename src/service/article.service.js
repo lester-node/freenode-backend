@@ -43,7 +43,7 @@ class ArticleService {
     return res ? res.dataValues : null;
   }
 
-  async serviceArticleNum(classifyId, calc) {
+  async serviceArticleNum(classifyId, calc, num) {
     const record = await classifyServiceSelectOne(classifyId);
     if (calc == "add") {
       return classifyServiceUpdate({
@@ -51,9 +51,9 @@ class ArticleService {
         articleTotal: ++record.articleTotal,
       });
     } else if (calc == "sub") {
-      return classifyServiceUpdate({
+      await classifyServiceUpdate({
         id: record.id,
-        articleTotal: --record.articleTotal,
+        articleTotal: record.articleTotal - num,
       });
     }
   }

@@ -39,7 +39,8 @@ class ClassifyService {
       if (item.show) {
         return { id: item.dataValues.id, name: item.dataValues.name };
       }
-    });
+      return false
+    }).filter(value => !!value == true);
     return arr;
   }
 

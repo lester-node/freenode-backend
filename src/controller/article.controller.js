@@ -7,6 +7,8 @@ const {
   serviceArticleNum,
 } = require("../service/article.service");
 
+const Article = require("../model/article.modal");
+
 class ArticleController {
   //新增
   async articleCreate(ctx, next) {
@@ -78,22 +80,51 @@ class ArticleController {
   //删除
   async articleDelete(ctx, next) {
     const { ids } = ctx.request.body;
-    //问题：promise先后、前端多选删除
+    let arr = [];
+    let sendRes;
     try {
-      ids.map(async (id) => {
-        let res = await serviceSelectOne(id);
-        console.log('res',res);
-        serviceArticleNum(res.classifyId, "sub");
+      await Promise.all(
+        ids.map(async (id) => {
+          return new Promise(async (resolve) => {
+            let res = await Article.findOne({
+              where: { id },
+            });
+            resolve(res.dataValues);
+          });
+        })
+      ).then((res) => {
+        res
+          .filter((item) => item.classifyId)
+          .map((item) => {
+            let index =
+              arr.length > 0
+                ? arr.findIndex(
+                    (itemA) => itemA?.classifyId == item?.classifyId
+                  )
+                : -1;
+            if (index > -1) {
+              arr.splice(index, 1, {
+                classifyId: item.classifyId,
+                num: arr[index].num + 1,
+              });
+            } else {
+              arr.push({ classifyId: item.classifyId, num: 1 });
+            }
+          });
+        arr.map((item) => {
+          serviceArticleNum(item.classifyId, "sub", item.num);
+        });
+        sendRes = serviceDelete(ids);
+        if (sendRes) {
+          ctx.body = {
+            result: 0,
+            message: "删除成功",
+            data: null,
+          };
+        } else {
+          throw "error";
+        }
       });
-      const res = await serviceDelete(ids);
-      if (res) {
-        ctx.body = {
-          message: "删除成功",
-          data: null,
-        };
-      } else {
-        throw "error";
-      }
     } catch (err) {
       ctx.body = {
         result: 1,

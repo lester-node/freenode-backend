@@ -13,7 +13,7 @@ const Tag = db.define("tag", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: false,
+    unique: true,
     comment: "标签名",
   },
   show: {
@@ -27,6 +27,7 @@ const Tag = db.define("tag", {
     type: DataTypes.STRING,
     allowNull: false,
     unique: false,
+    defaultValue: 'green',//暂时写死默认值
     comment: "颜色",
   },
 });
