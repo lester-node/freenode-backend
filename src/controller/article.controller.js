@@ -23,12 +23,20 @@ class ArticleController {
         },
       };
     } catch (err) {
-      console.log("err", err);
-      ctx.body = {
-        result: 1,
-        message: "操作失败",
-        data: null,
-      };
+      console.log('文章新增错误',err);
+      if (err.name == "SequelizeUniqueConstraintError") {
+        ctx.body = {
+          result: 1,
+          message: "文章标题名不能重复",
+          data: null,
+        };
+      } else {
+        ctx.body = {
+          result: 1,
+          message: "操作失败",
+          data: null,
+        };
+      }
     }
   }
 
@@ -46,11 +54,20 @@ class ArticleController {
         throw "error";
       }
     } catch (err) {
-      ctx.body = {
-        result: 1,
-        message: "操作失败",
-        data: null,
-      };
+      console.log("文章修改错误", err);
+      if (err.name == "SequelizeUniqueConstraintError") {
+        ctx.body = {
+          result: 1,
+          message: "文章标题名不能重复",
+          data: null,
+        };
+      } else {
+        ctx.body = {
+          result: 1,
+          message: "操作失败",
+          data: null,
+        };
+      }
     }
   }
 
@@ -69,6 +86,7 @@ class ArticleController {
         throw "error";
       }
     } catch (err) {
+      console.log("文章修改展示错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -77,7 +95,7 @@ class ArticleController {
     }
   }
 
-  //删除
+  //删除（删的时候要在分类表减去相应的数量）
   async articleDelete(ctx, next) {
     const { ids } = ctx.request.body;
     let arr = [];
@@ -126,6 +144,7 @@ class ArticleController {
         }
       });
     } catch (err) {
+      console.log("文章删除错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -151,6 +170,7 @@ class ArticleController {
         throw "error";
       }
     } catch (err) {
+      console.log("文章根据id查找错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -176,6 +196,7 @@ class ArticleController {
         },
       };
     } catch (err) {
+      console.log("文章分页错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

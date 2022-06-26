@@ -36,13 +36,6 @@ class ArticleService {
     return res.dataValues;
   }
 
-  async serviceRepeat(title) {
-    const res = await Article.findOne({
-      where: { title },
-    });
-    return res ? res.dataValues : null;
-  }
-
   async serviceArticleNum(classifyId, calc, num) {
     const record = await classifyServiceSelectOne(classifyId);
     if (calc == "add") {

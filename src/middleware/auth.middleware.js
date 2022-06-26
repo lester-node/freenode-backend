@@ -34,7 +34,6 @@ const auth = async (ctx, next) => {
 const hadAdminPermission = async (ctx, next) => {
   const { isAdmin } = ctx.state.user;
   if (!isAdmin) {
-    
   }
   await next();
 };

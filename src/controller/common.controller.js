@@ -14,6 +14,7 @@ class CommonController {
         },
       };
     } else {
+      console.log("图片上传错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

@@ -4,7 +4,6 @@ const router = new Router({ prefix: "/v1/tag" });
 const { auth } = require("../middleware/auth.middleware");
 const {
   tagValidator,
-  repeatValidator,
 } = require("../middleware/tag.middleware");
 
 const {
@@ -28,7 +27,6 @@ router.post(
   "/tagCreate",
   auth,
   tagValidator,
-  repeatValidator,
   tagCreate
 );
 router.post("/tagDelete", auth, idsValidator, tagDelete);
@@ -39,7 +37,6 @@ router.post(
   auth,
   tagValidator,
   idValidator,
-  repeatValidator,
   tagUpdate
 );
 

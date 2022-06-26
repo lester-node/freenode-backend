@@ -17,6 +17,7 @@ class UserController {
         data: null,
       };
     } catch (err) {
+      console.log("用户注册错误", err);
       ctx.body = {
         result: 1,
         message: "用户注册失败",
@@ -44,6 +45,7 @@ class UserController {
         },
       };
     } catch (err) {
+      console.log("用户登录错误", err);
       ctx.body = {
         result: 1,
         message: "用户登录失败",

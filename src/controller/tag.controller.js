@@ -8,7 +8,7 @@ const {
 } = require("../service/tag.service");
 
 class TagController {
-  //返回全部数据
+  //标签枚举
   async tagEnum(ctx, next) {
     try {
       const res = await serviceEnum();
@@ -22,6 +22,7 @@ class TagController {
         throw "error";
       }
     } catch (err) {
+      console.log("标签枚举错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -47,6 +48,7 @@ class TagController {
         },
       };
     } catch (err) {
+      console.log("标签分页错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -67,6 +69,7 @@ class TagController {
         },
       };
     } catch (err) {
+      console.log("标签新增错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -90,6 +93,7 @@ class TagController {
         throw "error";
       }
     } catch (err) {
+      console.log("标签删除错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -113,6 +117,7 @@ class TagController {
         throw "error";
       }
     } catch (err) {
+      console.log("标签修改展示错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -138,6 +143,7 @@ class TagController {
         throw "error";
       }
     } catch (err) {
+      console.log("标签根据id查找错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -160,6 +166,7 @@ class TagController {
         throw "error";
       }
     } catch (err) {
+      console.log("标签修改错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

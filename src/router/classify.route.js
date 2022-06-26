@@ -4,7 +4,6 @@ const router = new Router({ prefix: "/v1/classify" });
 const { auth } = require("../middleware/auth.middleware");
 const {
   classifyValidator,
-  repeatValidator,
 } = require("../middleware/classify.middleware");
 
 const {
@@ -28,7 +27,6 @@ router.post(
   "/classifyCreate",
   auth,
   classifyValidator,
-  repeatValidator,
   classifyCreate
 );
 router.post("/classifyDelete", auth, idsValidator, classifyDelete);
@@ -39,7 +37,6 @@ router.post(
   auth,
   classifyValidator,
   idValidator,
-  repeatValidator,
   classifyUpdate
 );
 

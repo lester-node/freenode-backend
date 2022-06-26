@@ -10,7 +10,7 @@ const {
 const Classify = require("../model/classify.modal");
 
 class ClassifyController {
-  //返回全部数据
+  //枚举
   async classifyEnum(ctx, next) {
     try {
       const res = await serviceEnum();
@@ -24,6 +24,7 @@ class ClassifyController {
         throw "error";
       }
     } catch (err) {
+      console.log("类型枚举错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -49,6 +50,7 @@ class ClassifyController {
         },
       };
     } catch (err) {
+      console.log("类型分页错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -69,15 +71,24 @@ class ClassifyController {
         },
       };
     } catch (err) {
-      ctx.body = {
-        result: 1,
-        message: "操作失败",
-        data: null,
-      };
+      console.log("类型新增错误", err);
+      if (err.name == "SequelizeUniqueConstraintError") {
+        ctx.body = {
+          result: 1,
+          message: "文章标题名不能重复",
+          data: null,
+        };
+      } else {
+        ctx.body = {
+          result: 1,
+          message: "类型新增操作失败",
+          data: null,
+        };
+      }
     }
   }
 
-  //删除 差判断文章为0
+  //删除（删的时候判断文章数不为0）
   async classifyDelete(ctx, next) {
     const { ids } = ctx.request.body;
     try {
@@ -103,7 +114,7 @@ class ClassifyController {
           } else {
             throw "error";
           }
-        }else{
+        } else {
           ctx.body = {
             result: 1,
             message: "删除的分类文章数必须为0",
@@ -112,6 +123,7 @@ class ClassifyController {
         }
       });
     } catch (err) {
+      console.log("类型删除错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -135,6 +147,7 @@ class ClassifyController {
         throw "error";
       }
     } catch (err) {
+      console.log("类型修改展示错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -160,6 +173,7 @@ class ClassifyController {
         throw "error";
       }
     } catch (err) {
+      console.log("类型根据id查找错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -182,11 +196,20 @@ class ClassifyController {
         throw "error";
       }
     } catch (err) {
-      ctx.body = {
-        result: 1,
-        message: "操作失败",
-        data: null,
-      };
+      console.log("类型修改错误", err);
+      if (err.name == "SequelizeUniqueConstraintError") {
+        ctx.body = {
+          result: 1,
+          message: "文章标题名不能重复",
+          data: null,
+        };
+      } else {
+        ctx.body = {
+          result: 1,
+          message: "操作失败",
+          data: null,
+        };
+      }
     }
   }
 }

@@ -1,5 +1,4 @@
 const bcrypt = require("bcryptjs");
-const { errInfo } = require("../config/constant");
 
 const { getUerInfo } = require("../service/user.service");
 
@@ -31,8 +30,12 @@ const verifyUser = async (ctx, next) => {
       return;
     }
   } catch (err) {
-    ctx.app.emit("error", errInfo, ctx);
-    return;
+    console.log("校验用户名错误", err);
+    ctx.body = {
+      result: 1,
+      message: "操作失败",
+      data: null,
+    };
   }
   await next();
 };
@@ -68,7 +71,12 @@ const verifyLogin = async (ctx, next) => {
       return;
     }
   } catch (err) {
-    return ctx.app.emit("error", errInfo, ctx);
+    console.log("校验用户名错误", err);
+    ctx.body = {
+      result: 1,
+      message: "操作失败",
+      data: null,
+    };
   }
   await next();
 };

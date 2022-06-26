@@ -26,13 +26,6 @@ class TagService {
     return res.dataValues;
   }
 
-  async serviceRepeat(name) {
-    const res = await Tag.findOne({
-      where: { name },
-    });
-    return res ? res.dataValues : null;
-  }
-
   async serviceEnum() {
     const res = await Tag.findAll();
     let arr = res

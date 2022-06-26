@@ -26,13 +26,6 @@ class ClassifyService {
     return res.dataValues;
   }
 
-  async serviceRepeat(name) {
-    const res = await Classify.findOne({
-      where: { name },
-    });
-    return res ? res.dataValues : null;
-  }
-
   async serviceEnum() {
     const res = await Classify.findAll();
     let arr = res.map((item) => {
@@ -55,7 +48,6 @@ class ClassifyService {
     const { count, rows } = await Classify.findAndCountAll({
       offset,
       limit: pageSize * 1,
-      // order: [["updatedAt", "DESC"]],
       where: {
         ...sendObj,
       },

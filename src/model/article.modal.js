@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 
 const db = require("../config/db");
-const Classify = require("./classify.modal");
-const Tag = require("./tag.modal");
+// const Classify = require("./classify.modal");
+// const Tag = require("./tag.modal");
 
 const Article = db.define("article", {
   id: {
@@ -40,7 +40,7 @@ const Article = db.define("article", {
     type: DataTypes.STRING,
     allowNull: true,
     unique: false,
-    comment: "标签Id",
+    comment: "标签id",
   },
   tagName: {
     type: DataTypes.STRING,

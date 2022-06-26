@@ -1,4 +1,4 @@
-
+//单个id检验不能为空
 const idValidator = async (ctx, next) => {
   const { id } = ctx.request.body;
   if (!id) {
@@ -12,6 +12,7 @@ const idValidator = async (ctx, next) => {
   await next();
 };
 
+//多个id校验不能为空
 const idsValidator = async (ctx, next) => {
   const { ids } = ctx.request.body;
   if (!Array.isArray(ids)) {
