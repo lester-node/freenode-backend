@@ -14,7 +14,9 @@ class ArticleController {
   async articleCreate(ctx, next) {
     try {
       const res = await serviceCreate(ctx.request.body);
-      await serviceArticleNum(res.classifyId, "add");
+      if (res.classifyId){
+        await serviceArticleNum(res.classifyId, "add");
+      } 
       ctx.body = {
         result: 0,
         message: "新增文章成功",

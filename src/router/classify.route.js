@@ -22,7 +22,7 @@ const {
 } = require("../controller/classify.controller");
 
 router.post("/classifyEnum", auth, classifyEnum);
-router.get("/classifyPage", auth, classifyPage);
+router.get("/classifyPage", classifyPage);
 router.post(
   "/classifyCreate",
   auth,
@@ -31,7 +31,7 @@ router.post(
 );
 router.post("/classifyDelete", auth, idsValidator, classifyDelete);
 router.post("/classifyChangeShow", auth, idValidator, classifyChangeShow);
-router.post("/classifySelectOne", auth, idValidator, classifySelectOne);
+router.post("/classifySelectOne", idValidator, classifySelectOne);
 router.post(
   "/classifyUpdate",
   auth,

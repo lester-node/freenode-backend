@@ -20,7 +20,7 @@ const {
   articleChangeShow,
 } = require("../controller/article.controller");
 
-router.get("/articlePage", auth, articlePage);
+router.get("/articlePage", articlePage);
 router.post(
   "/articleCreate",
   auth,
@@ -29,7 +29,7 @@ router.post(
 );
 router.post("/articleDelete", auth, idsValidator, articleDelete);
 router.post("/articleChangeShow", auth, idValidator, articleChangeShow);
-router.post("/articleSelectOne", auth, idValidator, articleSelectOne);
+router.post("/articleSelectOne", idValidator, articleSelectOne);
 router.post(
   "/articleUpdate",
   auth,

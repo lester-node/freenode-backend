@@ -22,7 +22,7 @@ const {
 } = require("../controller/tag.controller");
 
 router.post("/tagEnum", auth, tagEnum);
-router.get("/tagPage", auth, tagPage);
+router.get("/tagPage", tagPage);
 router.post(
   "/tagCreate",
   auth,
@@ -31,7 +31,7 @@ router.post(
 );
 router.post("/tagDelete", auth, idsValidator, tagDelete);
 router.post("/tagChangeShow", auth, idValidator, tagChangeShow);
-router.post("/tagSelectOne", auth, idValidator, tagSelectOne);
+router.post("/tagSelectOne", idValidator, tagSelectOne);
 router.post(
   "/tagUpdate",
   auth,
