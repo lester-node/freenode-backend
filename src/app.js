@@ -26,8 +26,8 @@ app.use(KoaParameter(app));
 app.use(router.routes()).use(router.allowedMethods());
 app.use(KoaStatic(path.join(__dirname, "./upload")));
 
-app.listen("3000", () => {
-  console.log(`server is running on http://localhost:3000`);
+app.listen("8000", () => {
+  console.log(`server is running on http://localhost:8000`);
 });
 
 //初始化表
