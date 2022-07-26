@@ -26,11 +26,11 @@ class ClassifyService {
     return res.dataValues;
   }
 
-  async serviceEnum() {
+  async serviceList() {
     const res = await Classify.findAll();
     let arr = res.map((item) => {
       if (item.show) {
-        return { id: item.dataValues.id, name: item.dataValues.name };
+        return item;
       }
       return false
     }).filter(value => !!value == true);

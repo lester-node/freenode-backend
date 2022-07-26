@@ -21,7 +21,7 @@ const {
   tagUpdate,
 } = require("../controller/tag.controller");
 
-router.post("/tagEnum", auth, tagEnum);
+router.post("/tagEnum", tagEnum);
 router.get("/tagPage", tagPage);
 router.post(
   "/tagCreate",

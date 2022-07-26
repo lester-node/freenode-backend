@@ -1,5 +1,5 @@
 const {
-  serviceEnum,
+  serviceList,
   servicePage,
   serviceCreate,
   serviceDelete,
@@ -11,9 +11,9 @@ const Classify = require("../model/classify.modal");
 
 class ClassifyController {
   //枚举
-  async classifyEnum(ctx, next) {
+  async classifyList(ctx, next) {
     try {
-      const res = await serviceEnum();
+      const res = await serviceList();
       if (res) {
         ctx.body = {
           result: 0,

@@ -12,7 +12,7 @@ const {
 } = require("../middleware/common.middleware");
 
 const {
-  classifyEnum,
+  classifyList,
   classifyPage,
   classifyCreate,
   classifyDelete,
@@ -21,7 +21,7 @@ const {
   classifyUpdate,
 } = require("../controller/classify.controller");
 
-router.post("/classifyEnum", auth, classifyEnum);
+router.post("/classifyList", classifyList);
 router.get("/classifyPage", classifyPage);
 router.post(
   "/classifyCreate",
