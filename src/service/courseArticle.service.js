@@ -1,25 +1,21 @@
-const Article = require("../model/article.model");
-const {
-  serviceSelectOne: classifyServiceSelectOne,
-  serviceUpdate: classifyServiceUpdate,
-} = require("../service/classify.service");
+const CourseArticle = require("../model/courseArticle.model");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
-class ArticleService {
+class CourseArticleService {
   async serviceCreate(obj) {
-    const res = await Article.create(obj);
+    const res = await CourseArticle.create(obj);
     return res.dataValues;
   }
 
   async serviceUpdate(obj) {
     const { id } = obj;
-    const res = await Article.update(obj, { where: { id } });
+    const res = await CourseArticle.update(obj, { where: { id } });
     return res[0] > 0 ? true : false;
   }
 
   async serviceDelete(ids) {
-    const res = await Article.destroy({
+    const res = await CourseArticle.destroy({
       where: {
         id: {
           [Op.or]: ids,
@@ -30,25 +26,10 @@ class ArticleService {
   }
 
   async serviceSelectOne(id) {
-    const res = await Article.findOne({
+    const res = await CourseArticle.findOne({
       where: { id },
     });
     return res.dataValues;
-  }
-
-  async serviceArticleNum(classifyId, calc, num) {
-    const record = await classifyServiceSelectOne(classifyId);
-    if (calc == "add") {
-      return classifyServiceUpdate({
-        id: record.id,
-        articleTotal: ++record.articleTotal,
-      });
-    } else if (calc == "sub") {
-      await classifyServiceUpdate({
-        id: record.id,
-        articleTotal: record.articleTotal - num,
-      });
-    }
   }
 
   async servicePage(pageNum, pageSize, obj) {
@@ -64,10 +45,10 @@ class ArticleService {
         })
       : null;
     const offset = (pageNum - 1) * pageSize;
-    const { count, rows } = await Article.findAndCountAll({
+    const { count, rows } = await CourseArticle.findAndCountAll({
       offset,
       limit: pageSize * 1,
-      // order: [["updatedAt", "DESC"]],
+      order: [["weight", "ASC"]],
       where: {
         ...sendObj,
       },
@@ -79,4 +60,4 @@ class ArticleService {
   }
 }
 
-module.exports = new ArticleService();
+module.exports = new CourseArticleService();

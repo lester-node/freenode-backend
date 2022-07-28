@@ -7,7 +7,7 @@ const {
   serviceSelectOne,
 } = require("../service/classify.service");
 
-const Classify = require("../model/classify.modal");
+const Classify = require("../model/classify.model");
 
 class ClassifyController {
   //枚举

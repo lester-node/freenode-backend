@@ -4,19 +4,13 @@ const {
   serviceUpdate,
   serviceDelete,
   serviceSelectOne,
-  serviceArticleNum,
-} = require("../service/article.service");
+} = require("../service/courseArticle.service");
 
-const Article = require("../model/article.model");
-
-class ArticleController {
+class CourseArticleController {
   //新增
-  async articleCreate(ctx, next) {
+  async courseArticleCreate(ctx, next) {
     try {
       const res = await serviceCreate(ctx.request.body);
-      if (res.classifyId){
-        await serviceArticleNum(res.classifyId, "add");
-      } 
       ctx.body = {
         result: 0,
         message: "新增文章成功",
@@ -43,7 +37,7 @@ class ArticleController {
   }
 
   //修改
-  async articleUpdate(ctx, next) {
+  async courseArticleUpdate(ctx, next) {
     try {
       const res = await serviceUpdate(ctx.request.body);
       if (res) {
@@ -74,7 +68,7 @@ class ArticleController {
   }
 
   //是否展示
-  async articleChangeShow(ctx, next) {
+  async courseArticleChangeShow(ctx, next) {
     try {
       const { show, id } = ctx.request.body;
       const res = await serviceUpdate({ show: show ? 1 : 0, id });
@@ -98,53 +92,20 @@ class ArticleController {
   }
 
   //删除（删的时候要在分类表减去相应的数量）
-  async articleDelete(ctx, next) {
+  async courseArticleDelete(ctx, next) {
     const { ids } = ctx.request.body;
-    let arr = [];
     let sendRes;
     try {
-      await Promise.all(
-        ids.map(async (id) => {
-          return new Promise(async (resolve) => {
-            let res = await Article.findOne({
-              where: { id },
-            });
-            resolve(res.dataValues);
-          });
-        })
-      ).then((res) => {
-        res
-          .filter((item) => item.classifyId)
-          .map((item) => {
-            let index =
-              arr.length > 0
-                ? arr.findIndex(
-                    (itemA) => itemA?.classifyId == item?.classifyId
-                  )
-                : -1;
-            if (index > -1) {
-              arr.splice(index, 1, {
-                classifyId: item.classifyId,
-                num: arr[index].num + 1,
-              });
-            } else {
-              arr.push({ classifyId: item.classifyId, num: 1 });
-            }
-          });
-        arr.map((item) => {
-          serviceArticleNum(item.classifyId, "sub", item.num);
-        });
-        sendRes = serviceDelete(ids);
-        if (sendRes) {
-          ctx.body = {
-            result: 0,
-            message: "删除成功",
-            data: null,
-          };
-        } else {
-          throw "error";
-        }
-      });
+      sendRes = serviceDelete(ids);
+      if (sendRes) {
+        ctx.body = {
+          result: 0,
+          message: "删除成功",
+          data: null,
+        };
+      } else {
+        throw "error";
+      }
     } catch (err) {
       console.log("文章删除错误", err);
       ctx.body = {
@@ -156,7 +117,7 @@ class ArticleController {
   }
 
   //根据id查找数据
-  async articleSelectOne(ctx, next) {
+  async courseArticleSelectOne(ctx, next) {
     const { id } = ctx.request.body;
     try {
       const res = await serviceSelectOne(id);
@@ -182,7 +143,7 @@ class ArticleController {
   }
 
   //分页
-  async articlePage(ctx, next) {
+  async courseArticlePage(ctx, next) {
     const {
       page: pageNum = 1,
       rows: pageSize = 10,
@@ -208,4 +169,4 @@ class ArticleController {
   }
 }
 
-module.exports = new ArticleController();
+module.exports = new CourseArticleController();

@@ -1,4 +1,4 @@
-const User = require("../model/user.modal");
+const User = require("../model/user.model");
 
 class UserService {
   async createUser(username, password) {

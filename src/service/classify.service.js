@@ -1,4 +1,4 @@
-const Classify = require("../model/classify.modal");
+const Classify = require("../model/classify.model");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 

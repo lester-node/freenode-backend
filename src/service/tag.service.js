@@ -1,4 +1,4 @@
-const Tag = require("../model/tag.modal");
+const Tag = require("../model/tag.model");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
