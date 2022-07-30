@@ -3,6 +3,19 @@ const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
 class CourseService {
+  async serviceList() {
+    const res = await Course.findAll();
+    let arr = res
+      .map((item) => {
+        if (item.show) {
+          return item;
+        }
+        return false;
+      })
+      .filter((value) => !!value == true);
+    return arr;
+  }
+
   async serviceCreate(obj) {
     const res = await Course.create(obj);
     return res.dataValues;
@@ -34,14 +47,9 @@ class CourseService {
 
   async servicePage(pageNum, pageSize, obj) {
     let sendObj = removeEmptyObj(obj);
-    sendObj.title
-      ? (sendObj.title = {
-          [Op.like]: `%${sendObj.title || ""}%`,
-        })
-      : null;
-    sendObj.tagId
-      ? (sendObj.tagId = {
-          [Op.like]: `%${sendObj.tagId || ""}%`,
+    sendObj.name
+      ? (sendObj.name = {
+          [Op.like]: `%${sendObj.name || ""}%`,
         })
       : null;
     const offset = (pageNum - 1) * pageSize;

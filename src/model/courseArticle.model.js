@@ -29,6 +29,18 @@ const CourseArticle = db.define("courseArticle", {
     defaultValue: 0,
     comment: "权重",
   },
+  courseId: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: false,
+    comment: "教程id",
+  },
+  courseName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: false,
+    comment: "教程名",
+  },
   show: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

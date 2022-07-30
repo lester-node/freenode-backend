@@ -4,7 +4,7 @@ const {
   serviceUpdate,
   serviceDelete,
   serviceSelectOne,
-  serviceArticleNum,
+  serviceClassifyTotal,
 } = require("../service/article.service");
 
 const Article = require("../model/article.model");
@@ -14,9 +14,11 @@ class ArticleController {
   async articleCreate(ctx, next) {
     try {
       const res = await serviceCreate(ctx.request.body);
-      if (res.classifyId){
-        await serviceArticleNum(res.classifyId, "add");
-      } 
+      if (res.classifyId && res.show == true) {
+        serviceClassifyTotal(res.classifyId, "createTrue", "add");
+      } else if (res.classifyId && res.show == false) {
+        serviceClassifyTotal(res.classifyId, "createFalse", "add");
+      }
       ctx.body = {
         result: 0,
         message: "新增文章成功",
@@ -25,7 +27,7 @@ class ArticleController {
         },
       };
     } catch (err) {
-      console.log('文章新增错误',err);
+      console.log("文章新增错误", err);
       if (err.name == "SequelizeUniqueConstraintError") {
         ctx.body = {
           result: 1,
@@ -45,6 +47,14 @@ class ArticleController {
   //修改
   async articleUpdate(ctx, next) {
     try {
+      const articleOne = await serviceSelectOne(ctx.request.body.id);
+      if (articleOne.show != ctx.request.body.show) {
+        if (ctx.request.body.show) {
+          serviceClassifyTotal(articleOne.classifyId, "update", "add");
+        } else {
+          serviceClassifyTotal(articleOne.classifyId, "update", "sub", 1);
+        }
+      }
       const res = await serviceUpdate(ctx.request.body);
       if (res) {
         ctx.body = {
@@ -78,6 +88,12 @@ class ArticleController {
     try {
       const { show, id } = ctx.request.body;
       const res = await serviceUpdate({ show: show ? 1 : 0, id });
+      const articleOne = await serviceSelectOne(id);
+      if (articleOne.classifyId && articleOne.show == true) {
+        serviceClassifyTotal(articleOne.classifyId, "update", "add");
+      } else if (articleOne.classifyId && articleOne.show == false) {
+        serviceClassifyTotal(articleOne.classifyId, "update", "sub", 1);
+      }
       if (res) {
         ctx.body = {
           result: 0,
@@ -114,7 +130,7 @@ class ArticleController {
         })
       ).then((res) => {
         res
-          .filter((item) => item.classifyId)
+          .filter((item) => item.classifyId && item.show)
           .map((item) => {
             let index =
               arr.length > 0
@@ -132,7 +148,7 @@ class ArticleController {
             }
           });
         arr.map((item) => {
-          serviceArticleNum(item.classifyId, "sub", item.num);
+          serviceClassifyTotal(item.classifyId, "delete", "sub", item.num);
         });
         sendRes = serviceDelete(ids);
         if (sendRes) {
@@ -190,6 +206,36 @@ class ArticleController {
     } = ctx.request.query;
     try {
       const res = await servicePage(pageNum, pageSize, obj);
+      ctx.body = {
+        result: 0,
+        message: "查询成功",
+        data: {
+          ...res,
+        },
+      };
+    } catch (err) {
+      console.log("文章分页错误", err);
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //分页
+  async articleFilterPage(ctx, next) {
+    const {
+      page: pageNum = 1,
+      rows: pageSize = 10,
+      ...obj
+    } = ctx.request.query;
+    let sendObj = {
+      ...obj,
+      show: true,
+    };
+    try {
+      const res = await servicePage(pageNum, pageSize, sendObj);
       ctx.body = {
         result: 0,
         message: "查询成功",

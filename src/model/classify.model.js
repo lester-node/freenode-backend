@@ -28,7 +28,14 @@ const Classify = db.define("classify", {
     allowNull: false,
     unique: false,
     defaultValue: 0,
-    comment: "文章数量",
+    comment: "文章正展示的数量",
+  },
+  articleTotalNum: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: false,
+    defaultValue: 0,
+    comment: "文章全部数量",
   },
 });
 

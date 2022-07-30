@@ -1,4 +1,5 @@
 const {
+  serviceList,
   servicePage,
   serviceCreate,
   serviceUpdate,
@@ -7,6 +8,28 @@ const {
 } = require("../service/course.service");
 
 class CourseController {
+  //枚举
+  async courseList(ctx, next) {
+    try {
+      const res = await serviceList();
+      if (res) {
+        ctx.body = {
+          result: 0,
+          message: "查询成功",
+          data: res,
+        };
+      } else {
+        throw "error";
+      }
+    } catch (err) {
+      console.log("类型枚举错误", err);
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
   //新增
   async courseCreate(ctx, next) {
     try {

@@ -13,6 +13,7 @@ const {
 
 const {
   articlePage,
+  articleFilterPage,
   articleCreate,
   articleUpdate,
   articleDelete,
@@ -21,6 +22,7 @@ const {
 } = require("../controller/article.controller");
 
 router.get("/articlePage", articlePage);
+router.get("/articleFilterPage", articleFilterPage);
 router.post(
   "/articleCreate",
   auth,

@@ -13,17 +13,17 @@ class CourseArticleController {
       const res = await serviceCreate(ctx.request.body);
       ctx.body = {
         result: 0,
-        message: "新增文章成功",
+        message: "新增教程文章成功",
         data: {
           ...res,
         },
       };
     } catch (err) {
-      console.log('文章新增错误',err);
+      console.log("教程文章新增错误", err);
       if (err.name == "SequelizeUniqueConstraintError") {
         ctx.body = {
           result: 1,
-          message: "文章标题名不能重复",
+          message: "教程文章标题名、权重不能重复",
           data: null,
         };
       } else {
@@ -50,11 +50,11 @@ class CourseArticleController {
         throw "error";
       }
     } catch (err) {
-      console.log("文章修改错误", err);
+      console.log("教程文章修改错误", err);
       if (err.name == "SequelizeUniqueConstraintError") {
         ctx.body = {
           result: 1,
-          message: "文章标题名不能重复",
+          message: "教程文章标题名不能重复",
           data: null,
         };
       } else {
@@ -82,7 +82,7 @@ class CourseArticleController {
         throw "error";
       }
     } catch (err) {
-      console.log("文章修改展示错误", err);
+      console.log("教程文章修改展示错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -107,7 +107,7 @@ class CourseArticleController {
         throw "error";
       }
     } catch (err) {
-      console.log("文章删除错误", err);
+      console.log("教程文章删除错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -133,7 +133,7 @@ class CourseArticleController {
         throw "error";
       }
     } catch (err) {
-      console.log("文章根据id查找错误", err);
+      console.log("教程文章根据id查找错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",
@@ -159,7 +159,37 @@ class CourseArticleController {
         },
       };
     } catch (err) {
-      console.log("文章分页错误", err);
+      console.log("教程文章分页错误", err);
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //分页
+  async courseArticleFilterPage(ctx, next) {
+    const {
+      page: pageNum = 1,
+      rows: pageSize = 10,
+      ...obj
+    } = ctx.request.query;
+    let sendObj = {
+      ...obj,
+      show: true,
+    };
+    try {
+      const res = await servicePage(pageNum, pageSize, sendObj);
+      ctx.body = {
+        result: 0,
+        message: "查询成功",
+        data: {
+          ...res,
+        },
+      };
+    } catch (err) {
+      console.log("教程文章分页错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

@@ -36,18 +36,48 @@ class ArticleService {
     return res.dataValues;
   }
 
-  async serviceArticleNum(classifyId, calc, num) {
+  async serviceClassifyTotal(classifyId, type, calc, num) {
     const record = await classifyServiceSelectOne(classifyId);
-    if (calc == "add") {
-      return classifyServiceUpdate({
-        id: record.id,
-        articleTotal: ++record.articleTotal,
-      });
-    } else if (calc == "sub") {
-      await classifyServiceUpdate({
-        id: record.id,
-        articleTotal: record.articleTotal - num,
-      });
+    switch (type) {
+      case "createTrue":
+        if (calc == "add") {
+          return classifyServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "createFalse":
+        if (calc == "add") {
+          return classifyServiceUpdate({
+            id: record.id,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "update":
+        if (calc == "add") {
+          return classifyServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+          });
+        } else if (calc == "sub") {
+          await classifyServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+          });
+        }
+        break;
+      case "delete":
+        if (calc == "sub") {
+          await classifyServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+            articleTotalNum: record.articleTotalNum - num,
+          });
+        }
+        break;
     }
   }
 
@@ -67,7 +97,7 @@ class ArticleService {
     const { count, rows } = await Article.findAndCountAll({
       offset,
       limit: pageSize * 1,
-      // order: [["updatedAt", "DESC"]],
+      order: [["updatedAt", "DESC"]],
       where: {
         ...sendObj,
       },

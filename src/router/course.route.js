@@ -12,6 +12,7 @@ const {
 } = require("../middleware/common.middleware");
 
 const {
+  courseList,
   coursePage,
   courseCreate,
   courseUpdate,
@@ -20,6 +21,7 @@ const {
   courseChangeShow,
 } = require("../controller/course.controller");
 
+router.post("/courseList", courseList);
 router.get("/coursePage", coursePage);
 router.post(
   "/courseCreate",

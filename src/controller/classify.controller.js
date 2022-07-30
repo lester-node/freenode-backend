@@ -102,7 +102,7 @@ class ClassifyController {
           });
         })
       ).then(async (res) => {
-        let judge = res.every((item) => item.articleTotal == 0);
+        let judge = res.every((item) => item.articleTotalNum == 0);
         if (judge) {
           const res = await serviceDelete(ids);
           if (res) {
@@ -117,7 +117,7 @@ class ClassifyController {
         } else {
           ctx.body = {
             result: 1,
-            message: "删除的分类文章数必须为0",
+            message: "删除的分类总文章数必须为0",
             data: null,
           };
         }

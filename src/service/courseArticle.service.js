@@ -39,11 +39,6 @@ class CourseArticleService {
           [Op.like]: `%${sendObj.title || ""}%`,
         })
       : null;
-    sendObj.tagId
-      ? (sendObj.tagId = {
-          [Op.like]: `%${sendObj.tagId || ""}%`,
-        })
-      : null;
     const offset = (pageNum - 1) * pageSize;
     const { count, rows } = await CourseArticle.findAndCountAll({
       offset,
