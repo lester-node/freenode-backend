@@ -7,6 +7,8 @@ const {
   serviceSelectOne,
 } = require("../service/course.service");
 
+const Course = require("../model/course.model");
+
 class CourseController {
   //枚举
   async courseList(ctx, next) {
@@ -117,20 +119,39 @@ class CourseController {
   //删除（删的时候要在分类表减去相应的数量）
   async courseDelete(ctx, next) {
     const { ids } = ctx.request.body;
-    let sendRes;
     try {
-      sendRes = serviceDelete(ids);
-      if (sendRes) {
-        ctx.body = {
-          result: 0,
-          message: "删除成功",
-          data: null,
-        };
-      } else {
-        throw "error";
-      }
+      await Promise.all(
+        ids.map(async (id) => {
+          return new Promise(async (resolve) => {
+            let res = await Course.findOne({
+              where: { id },
+            });
+            resolve(res.dataValues);
+          });
+        })
+      ).then(async (res) => {
+        let judge = res.every((item) => item.articleTotalNum == 0);
+        if (judge) {
+          const res = await serviceDelete(ids);
+          if (res) {
+            ctx.body = {
+              result: 0,
+              message: "删除成功",
+              data: null,
+            };
+          } else {
+            throw "error";
+          }
+        } else {
+          ctx.body = {
+            result: 1,
+            message: "删除的分类总文章数必须为0",
+            data: null,
+          };
+        }
+      });
     } catch (err) {
-      console.log("教程删除错误", err);
+      console.log("类型删除错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

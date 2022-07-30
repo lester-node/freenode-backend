@@ -27,8 +27,22 @@ const Tag = db.define("tag", {
     type: DataTypes.STRING,
     allowNull: false,
     unique: false,
-    defaultValue: 'green',//暂时写死默认值
+    defaultValue: "green", //暂时写死默认值
     comment: "颜色",
+  },
+  articleTotal: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: false,
+    defaultValue: 0,
+    comment: "文章正展示的数量",
+  },
+  articleTotalNum: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: false,
+    defaultValue: 0,
+    comment: "文章全部数量",
   },
 });
 

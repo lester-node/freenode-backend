@@ -1,8 +1,25 @@
 const CourseArticle = require("../model/courseArticle.model");
+const {
+  serviceSelectOne: courseServiceSelectOne,
+  serviceUpdate: courseServiceUpdate,
+} = require("../service/course.service");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
 class CourseArticleService {
+  async serviceList() {
+    const res = await CourseArticle.findAll();
+    let arr = res
+      .map((item) => {
+        if (item.show) {
+          return item;
+        }
+        return false;
+      })
+      .filter((value) => !!value == true);
+    return arr;
+  }
+
   async serviceCreate(obj) {
     const res = await CourseArticle.create(obj);
     return res.dataValues;
@@ -30,6 +47,51 @@ class CourseArticleService {
       where: { id },
     });
     return res.dataValues;
+  }
+
+  async serviceCourseTotal(courseId, type, calc, num) {
+    const record = await courseServiceSelectOne(courseId);
+    switch (type) {
+      case "createTrue":
+        if (calc == "add") {
+          return courseServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "createFalse":
+        if (calc == "add") {
+          return courseServiceUpdate({
+            id: record.id,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "update":
+        if (calc == "add") {
+          return courseServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+          });
+        } else if (calc == "sub") {
+          await courseServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+          });
+        }
+        break;
+      case "delete":
+        if (calc == "sub") {
+          await courseServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+            articleTotalNum: record.articleTotalNum - num,
+          });
+        }
+        break;
+    }
   }
 
   async servicePage(pageNum, pageSize, obj) {

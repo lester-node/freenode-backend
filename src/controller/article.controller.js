@@ -5,6 +5,7 @@ const {
   serviceDelete,
   serviceSelectOne,
   serviceClassifyTotal,
+  serviceTagTotal,
 } = require("../service/article.service");
 
 const Article = require("../model/article.model");
@@ -18,6 +19,15 @@ class ArticleController {
         serviceClassifyTotal(res.classifyId, "createTrue", "add");
       } else if (res.classifyId && res.show == false) {
         serviceClassifyTotal(res.classifyId, "createFalse", "add");
+      }
+      if (res.tagId && res.show == true) {
+        res.tagId?.split(",").map((id) => {
+          serviceTagTotal(id, "createTrue", "add");
+        });
+      } else if (res.tagId && res.show == false) {
+        res.tagId?.split(",").map((id) => {
+          serviceTagTotal(id, "createFalse", "add");
+        });
       }
       ctx.body = {
         result: 0,
@@ -48,14 +58,73 @@ class ArticleController {
   async articleUpdate(ctx, next) {
     try {
       const articleOne = await serviceSelectOne(ctx.request.body.id);
-      if (articleOne.show != ctx.request.body.show) {
+      if (articleOne.classifyId != ctx.request.body.classifyId) {
+        articleOne.classifyId &&
+          serviceClassifyTotal(articleOne.classifyId, "delete", "sub", 1);
         if (ctx.request.body.show) {
-          serviceClassifyTotal(articleOne.classifyId, "update", "add");
+          serviceClassifyTotal(
+            ctx.request.body.classifyId,
+            "createTrue",
+            "add"
+          );
         } else {
-          serviceClassifyTotal(articleOne.classifyId, "update", "sub", 1);
+          serviceClassifyTotal(
+            ctx.request.body.classifyId,
+            "createFalse",
+            "add"
+          );
+        }
+      } else {
+        if (articleOne.show != ctx.request.body.show) {
+          if (ctx.request.body.show) {
+            serviceClassifyTotal(articleOne.classifyId, "update", "add");
+          } else {
+            serviceClassifyTotal(articleOne.classifyId, "update", "sub", 1);
+          }
         }
       }
-      const res = await serviceUpdate(ctx.request.body);
+      if (articleOne?.tagId != ctx.request.body.tagId) {
+        Promise.all(
+          articleOne.tagId
+            ? articleOne.tagId?.split(",").map(async (id) => {
+                return new Promise(async (resolve) => {
+                  await serviceTagTotal(id, "delete", "sub", 1);
+                  resolve();
+                });
+              })
+            : []
+        ).then(() => {
+          if (ctx.request.body.show) {
+            ctx.request.body.tagId?.split(",").map((id) => {
+              serviceTagTotal(id, "createTrue", "add");
+            });
+          } else {
+            ctx.request.body.tagId?.split(",").map((id) => {
+              serviceTagTotal(id, "createFalse", "add");
+            });
+          }
+        });
+      } else {
+        if (articleOne.show != ctx.request.body.show) {
+          if (ctx.request.body.show) {
+            ctx.request.body.tagId?.split(",").map((id) => {
+              serviceTagTotal(id, "update", "add");
+            });
+          } else {
+            ctx.request.body.tagId?.split(",").map((id) => {
+              serviceTagTotal(id, "update", "sub", 1);
+            });
+          }
+        }
+      }
+      let sendObj = {
+        ...ctx.request.body,
+        classifyId: ctx.request.body.classifyId ?? null,
+        classifyName: ctx.request.body.classifyName ?? null,
+        tagId: ctx.request.body.tagId ?? null,
+        tagName: ctx.request.body.tagName ?? null,
+      };
+      const res = await serviceUpdate(sendObj);
       if (res) {
         ctx.body = {
           result: 0,
@@ -94,6 +163,15 @@ class ArticleController {
       } else if (articleOne.classifyId && articleOne.show == false) {
         serviceClassifyTotal(articleOne.classifyId, "update", "sub", 1);
       }
+      if (articleOne.tagId && articleOne.show == true) {
+        articleOne.tagId?.split(",").map((id) => {
+          serviceTagTotal(id, "update", "add");
+        });
+      } else if (articleOne.tagId && articleOne.show == false) {
+        articleOne.tagId?.split(",").map((id) => {
+          serviceTagTotal(id, "update", "sub", 1);
+        });
+      }
       if (res) {
         ctx.body = {
           result: 0,
@@ -116,7 +194,8 @@ class ArticleController {
   //删除（删的时候要在分类表减去相应的数量）
   async articleDelete(ctx, next) {
     const { ids } = ctx.request.body;
-    let arr = [];
+    let arrA = [];
+    let arrB = [];
     let sendRes;
     try {
       await Promise.all(
@@ -130,25 +209,56 @@ class ArticleController {
         })
       ).then((res) => {
         res
-          .filter((item) => item.classifyId && item.show)
+          .filter((item) => item.classifyId)
           .map((item) => {
             let index =
-              arr.length > 0
-                ? arr.findIndex(
+              arrA.length > 0
+                ? arrA.findIndex(
                     (itemA) => itemA?.classifyId == item?.classifyId
                   )
                 : -1;
             if (index > -1) {
-              arr.splice(index, 1, {
+              arrA.splice(index, 1, {
                 classifyId: item.classifyId,
-                num: arr[index].num + 1,
+                num: arrA[index].num + 1,
               });
             } else {
-              arr.push({ classifyId: item.classifyId, num: 1 });
+              arrA.push({ classifyId: item.classifyId, num: 1 });
             }
           });
-        arr.map((item) => {
+        arrA.map((item) => {
           serviceClassifyTotal(item.classifyId, "delete", "sub", item.num);
+        });
+        let resA = [];
+        res
+          .filter((item) => item.tagId)
+          .map((item) => {
+            item.tagId.split(",").map((id, index) => {
+              resA.push({
+                ...item,
+                tagId: id,
+                tagName: item.tagName.split(",")[index],
+              });
+            });
+          });
+        resA
+          .filter((item) => item.tagId)
+          .map((item) => {
+            let index =
+              arrB.length > 0
+                ? arrB.findIndex((itemA) => itemA?.tagId == item?.tagId)
+                : -1;
+            if (index > -1) {
+              arrB.splice(index, 1, {
+                tagId: item.tagId,
+                num: arrB[index].num + 1,
+              });
+            } else {
+              arrB.push({ tagId: item.tagId, num: 1 });
+            }
+          });
+        arrB.map((item) => {
+          serviceTagTotal(item.tagId, "delete", "sub", item.num);
         });
         sendRes = serviceDelete(ids);
         if (sendRes) {

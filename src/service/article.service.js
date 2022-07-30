@@ -3,6 +3,10 @@ const {
   serviceSelectOne: classifyServiceSelectOne,
   serviceUpdate: classifyServiceUpdate,
 } = require("../service/classify.service");
+const {
+  serviceSelectOne: tagServiceSelectOne,
+  serviceUpdate: tagServiceUpdate,
+} = require("../service/tag.service");
 const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
@@ -72,6 +76,51 @@ class ArticleService {
       case "delete":
         if (calc == "sub") {
           await classifyServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+            articleTotalNum: record.articleTotalNum - num,
+          });
+        }
+        break;
+    }
+  }
+
+  async serviceTagTotal(tagId, type, calc, num) {
+    const record = await tagServiceSelectOne(tagId);
+    switch (type) {
+      case "createTrue":
+        if (calc == "add") {
+          return tagServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "createFalse":
+        if (calc == "add") {
+          return tagServiceUpdate({
+            id: record.id,
+            articleTotalNum: ++record.articleTotalNum,
+          });
+        }
+        break;
+      case "update":
+        if (calc == "add") {
+          return tagServiceUpdate({
+            id: record.id,
+            articleTotal: ++record.articleTotal,
+          });
+        } else if (calc == "sub") {
+          await tagServiceUpdate({
+            id: record.id,
+            articleTotal: record.articleTotal - num,
+          });
+        }
+        break;
+      case "delete":
+        if (calc == "sub") {
+          await tagServiceUpdate({
             id: record.id,
             articleTotal: record.articleTotal - num,
             articleTotalNum: record.articleTotalNum - num,

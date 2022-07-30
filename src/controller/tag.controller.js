@@ -7,6 +7,8 @@ const {
   serviceSelectOne,
 } = require("../service/tag.service");
 
+const Tag = require("../model/tag.model");
+
 class TagController {
   //标签枚举
   async tagEnum(ctx, next) {
@@ -78,20 +80,40 @@ class TagController {
     }
   }
 
-  //删除
+  //删除（删的时候判断文章数不为0）
   async tagDelete(ctx, next) {
     const { ids } = ctx.request.body;
     try {
-      const res = await serviceDelete(ids);
-      if (res) {
-        ctx.body = {
-          result: 0,
-          message: "删除成功",
-          data: null,
-        };
-      } else {
-        throw "error";
-      }
+      await Promise.all(
+        ids.map(async (id) => {
+          return new Promise(async (resolve) => {
+            let res = await Tag.findOne({
+              where: { id },
+            });
+            resolve(res.dataValues);
+          });
+        })
+      ).then(async (res) => {
+        let judge = res.every((item) => item.articleTotalNum == 0);
+        if (judge) {
+          const res = await serviceDelete(ids);
+          if (res) {
+            ctx.body = {
+              result: 0,
+              message: "删除成功",
+              data: null,
+            };
+          } else {
+            throw "error";
+          }
+        } else {
+          ctx.body = {
+            result: 1,
+            message: "删除的标签总文章数必须为0",
+            data: null,
+          };
+        }
+      });
     } catch (err) {
       console.log("标签删除错误", err);
       ctx.body = {
