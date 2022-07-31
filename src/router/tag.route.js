@@ -12,7 +12,7 @@ const {
 } = require("../middleware/common.middleware");
 
 const {
-  tagEnum,
+  tagList,
   tagPage,
   tagCreate,
   tagDelete,
@@ -21,7 +21,7 @@ const {
   tagUpdate,
 } = require("../controller/tag.controller");
 
-router.post("/tagEnum", tagEnum);
+router.post("/tagList", tagList);
 router.get("/tagPage", tagPage);
 router.post(
   "/tagCreate",

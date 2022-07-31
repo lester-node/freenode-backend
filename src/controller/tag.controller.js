@@ -1,5 +1,5 @@
 const {
-  serviceEnum,
+  serviceList,
   servicePage,
   serviceCreate,
   serviceDelete,
@@ -11,9 +11,9 @@ const Tag = require("../model/tag.model");
 
 class TagController {
   //标签枚举
-  async tagEnum(ctx, next) {
+  async tagList(ctx, next) {
     try {
-      const res = await serviceEnum();
+      const res = await serviceList();
       if (res) {
         ctx.body = {
           result: 0,

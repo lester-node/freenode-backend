@@ -26,12 +26,12 @@ class TagService {
     return res.dataValues;
   }
 
-  async serviceEnum() {
+  async serviceList() {
     const res = await Tag.findAll();
     let arr = res
       .map((item) => {
         if (item.show) {
-          return { id: item.dataValues.id, name: item.dataValues.name };
+          return item;
         }
         return false;
       })
