@@ -7,6 +7,8 @@ const {
   serviceSelectOne,
 } = require("../service/course.service");
 
+const CourseArticle = require("../model/courseArticle.model");
+
 const Course = require("../model/course.model");
 
 class CourseController {
@@ -25,6 +27,51 @@ class CourseController {
       }
     } catch (err) {
       console.log("类型枚举错误", err);
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+  //树
+  async courseTree(ctx, next) {
+    try {
+      const res = await serviceList();
+      const arr = [];
+      await Promise.all(
+        res.map(async (item) => {
+          return new Promise(async (resolve) => {
+            let res = await CourseArticle.findAll({
+              where: { courseId: item.id },
+            });
+            resolve(res);
+          });
+        })
+      ).then((val) => {
+        res.map((item, index) => {
+          arr.push({
+            title: item.name,
+            key: item.id,
+            children: val[index].map((itemA) => ({
+              title: itemA.title,
+              key: itemA.id,
+              isLeaf: true,
+            })),
+          });
+        });
+        if (val) {
+          ctx.body = {
+            result: 0,
+            message: "查询成功",
+            data: arr,
+          };
+        } else {
+          throw "error";
+        }
+      });
+    } catch (err) {
+      console.log("文章树错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

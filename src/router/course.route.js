@@ -14,6 +14,7 @@ const {
 const {
   courseList,
   coursePage,
+  courseTree,
   courseCreate,
   courseUpdate,
   courseDelete,
@@ -23,6 +24,7 @@ const {
 
 router.post("/courseList", courseList);
 router.get("/coursePage", coursePage);
+router.post("/courseTree", courseTree);
 router.post(
   "/courseCreate",
   auth,
