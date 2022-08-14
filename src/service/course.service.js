@@ -4,7 +4,9 @@ const { removeEmptyObj } = require("../config/utils");
 
 class CourseService {
   async serviceList() {
-    const res = await Course.findAll();
+    const res = await Course.findAll({
+      order: [["weight", "ASC"]],
+    });
     let arr = res
       .map((item) => {
         if (item.show) {

@@ -23,13 +23,6 @@ const Tag = db.define("tag", {
     defaultValue: 1,
     comment: "0不显示，1显示",
   },
-  color: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: false,
-    defaultValue: "green", //暂时写死默认值
-    comment: "颜色",
-  },
   articleTotal: {
     type: DataTypes.INTEGER,
     allowNull: false,
