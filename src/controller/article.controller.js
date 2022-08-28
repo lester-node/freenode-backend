@@ -1,4 +1,5 @@
 const {
+  serviceList: articleServiceList,
   servicePage,
   serviceCreate,
   serviceUpdate,
@@ -7,6 +8,10 @@ const {
   serviceClassifyTotal,
   serviceTagTotal,
 } = require("../service/article.service");
+
+const {
+  serviceList: courseArticleServiceList,
+} = require("../service/courseArticle.service");
 
 const Article = require("../model/article.model");
 
@@ -333,7 +338,7 @@ class ArticleController {
     }
   }
 
-  //分页
+  //过滤不展示的分页
   async articleFilterPage(ctx, next) {
     const {
       page: pageNum = 1,
@@ -355,6 +360,30 @@ class ArticleController {
       };
     } catch (err) {
       console.log("文章分页错误", err);
+      ctx.body = {
+        result: 1,
+        message: "操作失败",
+        data: null,
+      };
+    }
+  }
+
+  //获取文章和教程文章所有的list
+  async articleAndCourseList(ctx, next) {
+    const { title } = ctx.request.query;
+    try {
+      const articleRes = await articleServiceList({ title });
+      if (articleRes) {
+        ctx.body = {
+          result: 0,
+          message: "查询成功",
+          data: [...articleRes],
+        };
+      } else {
+        throw "error";
+      }
+    } catch (err) {
+      console.log("获取教程文章和文章列表错误", err);
       ctx.body = {
         result: 1,
         message: "操作失败",

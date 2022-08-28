@@ -43,7 +43,7 @@ class CourseController {
         res.map(async (item) => {
           return new Promise(async (resolve) => {
             let res = await CourseArticle.findAll({
-              where: { courseId: item.id },
+              where: { courseId: item.id, show: true },
             });
             resolve(res);
           });

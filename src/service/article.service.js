@@ -11,6 +11,29 @@ const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
 class ArticleService {
+  async serviceList(obj) {
+    let sendObj = removeEmptyObj(obj);
+    sendObj.title
+      ? (sendObj.title = {
+          [Op.like]: `%${sendObj.title || ""}%`,
+        })
+      : null;
+    const res = await Article.findAll({
+      where: {
+        ...sendObj,
+      },
+    });
+    let arr = res
+      .map((item) => {
+        if (item.show) {
+          return { ...item.dataValues, name: "文章" };
+        }
+        return false;
+      })
+      .filter((value) => !!value == true);
+    return arr;
+  }
+
   async serviceCreate(obj) {
     const res = await Article.create(obj);
     return res.dataValues;

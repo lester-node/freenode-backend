@@ -14,6 +14,7 @@ const {
 const {
   articlePage,
   articleFilterPage,
+  articleAndCourseList,
   articleCreate,
   articleUpdate,
   articleDelete,
@@ -23,6 +24,7 @@ const {
 
 router.get("/articlePage", articlePage);
 router.get("/articleFilterPage", articleFilterPage);
+router.get("/articleAndCourseList", articleAndCourseList);
 router.post(
   "/articleCreate",
   auth,

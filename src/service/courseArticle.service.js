@@ -7,12 +7,22 @@ const { Op } = require("sequelize");
 const { removeEmptyObj } = require("../config/utils");
 
 class CourseArticleService {
-  async serviceList() {
-    const res = await CourseArticle.findAll();
+  async serviceList(obj) {
+    let sendObj = removeEmptyObj(obj);
+    sendObj.title
+      ? (sendObj.title = {
+          [Op.like]: `%${sendObj.title || ""}%`,
+        })
+      : null;
+    const res = await CourseArticle.findAll({
+      where: {
+        ...sendObj,
+      },
+    });
     let arr = res
       .map((item) => {
         if (item.show) {
-          return item;
+          return { ...item.dataValues, name: "教程" };
         }
         return false;
       })
