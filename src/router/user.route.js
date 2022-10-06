@@ -8,10 +8,7 @@ const {
   verifyLogin,
 } = require("../middleware/user.middleware");
 
-const {
-  register,
-  login,
-} = require("../controller/user.controller");
+const { register, login } = require("../controller/user.controller");
 
 router.post("/register", userValidator, verifyUser, crpytPassword, register);
 

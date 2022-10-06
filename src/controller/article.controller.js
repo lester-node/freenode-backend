@@ -368,8 +368,8 @@ class ArticleController {
     }
   }
 
-  //获取文章和教程文章所有的list
-  async articleAndCourseList(ctx, next) {
+  //获取文章的list
+  async articleList(ctx, next) {
     const { title } = ctx.request.query;
     try {
       const articleRes = await articleServiceList({ title });

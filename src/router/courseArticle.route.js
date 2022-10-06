@@ -28,7 +28,12 @@ router.post(
   courseArticleCreate
 );
 router.post("/courseArticleDelete", auth, idsValidator, courseArticleDelete);
-router.post("/courseArticleChangeShow", auth, idValidator, courseArticleChangeShow);
+router.post(
+  "/courseArticleChangeShow",
+  auth,
+  idValidator,
+  courseArticleChangeShow
+);
 router.post("/courseArticleSelectOne", idValidator, courseArticleSelectOne);
 router.post(
   "/courseArticleUpdate",

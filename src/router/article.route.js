@@ -2,9 +2,7 @@ const Router = require("koa-router");
 
 const router = new Router({ prefix: "/v1/article" });
 const { auth } = require("../middleware/auth.middleware");
-const {
-  articleValidator,
-} = require("../middleware/article.middleware");
+const { articleValidator } = require("../middleware/article.middleware");
 
 const {
   idValidator,
@@ -14,7 +12,7 @@ const {
 const {
   articlePage,
   articleFilterPage,
-  articleAndCourseList,
+  articleList,
   articleCreate,
   articleUpdate,
   articleDelete,
@@ -24,13 +22,8 @@ const {
 
 router.get("/articlePage", articlePage);
 router.get("/articleFilterPage", articleFilterPage);
-router.get("/articleAndCourseList", articleAndCourseList);
-router.post(
-  "/articleCreate",
-  auth,
-  articleValidator,
-  articleCreate
-);
+router.get("/articleList", articleList);
+router.post("/articleCreate", auth, articleValidator, articleCreate);
 router.post("/articleDelete", auth, idsValidator, articleDelete);
 router.post("/articleChangeShow", auth, idValidator, articleChangeShow);
 router.post("/articleSelectOne", idValidator, articleSelectOne);

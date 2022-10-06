@@ -2,9 +2,7 @@ const Router = require("koa-router");
 
 const router = new Router({ prefix: "/v1/classify" });
 const { auth } = require("../middleware/auth.middleware");
-const {
-  classifyValidator,
-} = require("../middleware/classify.middleware");
+const { classifyValidator } = require("../middleware/classify.middleware");
 
 const {
   idValidator,
@@ -23,12 +21,7 @@ const {
 
 router.post("/classifyList", classifyList);
 router.get("/classifyPage", classifyPage);
-router.post(
-  "/classifyCreate",
-  auth,
-  classifyValidator,
-  classifyCreate
-);
+router.post("/classifyCreate", auth, classifyValidator, classifyCreate);
 router.post("/classifyDelete", auth, idsValidator, classifyDelete);
 router.post("/classifyChangeShow", auth, idValidator, classifyChangeShow);
 router.post("/classifySelectOne", idValidator, classifySelectOne);
