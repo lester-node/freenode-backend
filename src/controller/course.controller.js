@@ -95,7 +95,7 @@ class CourseController {
       if (err.name == "SequelizeUniqueConstraintError") {
         ctx.body = {
           result: 1,
-          message: "教程标题名不能重复",
+          message: "教程标题名或权重不能重复",
           data: null,
         };
       } else {
@@ -126,7 +126,7 @@ class CourseController {
       if (err.name == "SequelizeUniqueConstraintError") {
         ctx.body = {
           result: 1,
-          message: "教程标题名不能重复",
+          message: "教程标题名或权重不能重复",
           data: null,
         };
       } else {
