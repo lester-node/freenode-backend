@@ -9,10 +9,6 @@ const {
   serviceTagTotal,
 } = require("../service/article.service");
 
-const {
-  serviceList: courseArticleServiceList,
-} = require("../service/courseArticle.service");
-
 const Article = require("../model/article.model");
 
 class ArticleController {
